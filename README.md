@@ -2,13 +2,17 @@
 
 This is a GraphQL API for the Rate Repository application.
 
+## ✔️ Requirements
+
+Node (versions equal or above `12.0.0` are preferred) and npm. If you haven't installed Node or npm, [nvm](https://github.com/nvm-sh/nvm) is an easy to use tool for installing both.
+
 ## 🚀 Getting started
 
 1. Clone this repository and run `npm install` in the `rate-repository-api` folder.
 
-2. Run `npm run build`. This will setup a sqlite database and run migrations.
+2. Run `npm run build`. This will setup the sqlite database and run the migrations.
 
-3. (Optional) To populate the database with some seed data you can run `npm run seed:run`. **Note:** running this command will remove all existing data.
+3. **(Optional)** To populate the database with some seed data you can run `npm run seed:run`. **Note:** running this command will remove all existing data.
 
 4. Rate Repository API uses the GitHub API, which has quite small rate limit (60 per requests per hour) for unauthorized requests. Therefore, we need to register it as an OAuth application to obtain client credentials. Register your OAuth application [here](https://github.com/settings/applications/new) by setting "Application name" as "Rate Repository API", "Homepage URL" as https://github.com/Kaltsoon/rate-repository-api and "Authorization callback URL" as http://localhost:5000. Now you should see your application [here](https://github.com/settings/developers) and by going to the application's page, see the "Client ID" and "Client Secret" values.
 

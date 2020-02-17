@@ -2,7 +2,7 @@ import { gql } from 'apollo-server';
 import { get } from 'lodash';
 import * as yup from 'yup';
 
-import createPaginatedQuery from '../../utils/createPaginatedQuery';
+import createPaginationQuery from '../../utils/createPaginationQuery';
 
 export const typeDefs = gql`
   type Repository {
@@ -50,7 +50,7 @@ export const resolvers = {
     reviews: async (obj, args, { models: { Review } }) => {
       const normalizedArgs = await reviewsArgsSchema.validate(args);
 
-      return createPaginatedQuery(
+      return createPaginationQuery(
         () =>
           Review.query().where({
             repositoryId: obj.id,

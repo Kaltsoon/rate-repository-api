@@ -1,7 +1,7 @@
 import { gql } from 'apollo-server';
 import * as yup from 'yup';
 
-import createPaginatedQuery from '../../utils/createPaginatedQuery';
+import createPaginationQuery from '../../utils/createPaginationQuery';
 
 export const typeDefs = gql`
   extend type Query {
@@ -26,7 +26,7 @@ export const resolvers = {
     users: async (obj, args, { models: { User } }) => {
       const normalizedArgs = await usersArgsSchema.validate(args);
 
-      return createPaginatedQuery(() => User.query(), {
+      return createPaginationQuery(() => User.query(), {
         orderColumn: 'createdAt',
         orderDirection: 'desc',
         first: normalizedArgs.first,

@@ -1,7 +1,7 @@
 import { gql } from 'apollo-server';
 import * as yup from 'yup';
 
-import createPaginatedQuery from '../../utils/createPaginatedQuery';
+import createPaginationQuery from '../../utils/createPaginationQuery';
 
 export const typeDefs = gql`
   type User {
@@ -26,7 +26,7 @@ export const resolvers = {
     reviews: async (obj, args, { models: { Review } }) => {
       const normalizedArgs = await reviewsArgsSchema.validate(args);
 
-      return createPaginatedQuery(
+      return createPaginationQuery(
         () =>
           Review.query().where({
             userId: obj.id,

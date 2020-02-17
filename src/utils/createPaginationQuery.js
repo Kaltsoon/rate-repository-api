@@ -11,7 +11,7 @@ const parseCursor = cursor => {
 
 const getComparator = orderDirection => (orderDirection === 'asc' ? '>' : '<');
 
-const createPaginatedQuery = async (getQuery, options = {}) => {
+const createPaginationQuery = async (getQuery, options = {}) => {
   const {
     first = 40,
     after,
@@ -60,4 +60,4 @@ const createPaginatedQuery = async (getQuery, options = {}) => {
   };
 };
 
-export default createPaginatedQuery;
+export default createPaginationQuery;

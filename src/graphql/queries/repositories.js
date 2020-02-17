@@ -2,7 +2,7 @@ import { gql } from 'apollo-server';
 import { raw } from 'objection';
 import * as yup from 'yup';
 
-import createPaginatedQuery from '../../utils/createPaginatedQuery';
+import createPaginationQuery from '../../utils/createPaginationQuery';
 
 export const typeDefs = gql`
   enum AllRepositoriesOrderBy {
@@ -84,7 +84,7 @@ export const resolvers = {
         ]);
       }
 
-      return createPaginatedQuery(() => query.clone(), {
+      return createPaginationQuery(() => query.clone(), {
         first,
         after,
         orderDirection: orderDirection.toLowerCase(),
