@@ -26,8 +26,10 @@ class GithubClient {
   }
 
   async getRequestWithCache(cacheKey, url, options) {
-    if (this.cache.get(cacheKey)) {
-      const { data } = await this.cache.get(cacheKey);
+    const cachedPromise = this.cache.get(cacheKey);
+
+    if (cachedPromise) {
+      const { data } = await cachedPromise;
 
       return data;
     }

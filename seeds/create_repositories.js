@@ -27,5 +27,17 @@ exports.seed = async knex => {
       name: 'lombok',
       ...createDateColumns(new Date(Date.now() - 3 * oneHour)),
     },
+    {
+      id: 'rails/rails',
+      owner_name: 'rails',
+      name: 'rails',
+      ...createDateColumns(new Date(Date.now() - 4 * oneHour)),
+    },
+    {
+      id: 'django/django',
+      owner_name: 'django',
+      name: 'django',
+      ...createDateColumns(new Date(Date.now() - 5 * oneHour)),
+    },
   ]);
 };

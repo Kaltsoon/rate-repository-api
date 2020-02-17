@@ -22,6 +22,7 @@ export const typeDefs = gql`
     url: String
     ownerAvatarUrl: String
     description: String
+    language: String
   }
 `;
 
@@ -30,8 +31,8 @@ const reviewsArgsSchema = yup.object({
   first: yup
     .number()
     .min(1)
-    .max(40)
-    .default(40),
+    .max(30)
+    .default(30),
 });
 
 const makeGithubRepositoryResolver = getValue => async (
@@ -93,6 +94,9 @@ export const resolvers = {
       repository => get(repository, 'open_issues_count') || 0,
     ),
     url: makeGithubRepositoryResolver(repository => get(repository, 'url')),
+    language: makeGithubRepositoryResolver(repository =>
+      get(repository, 'language'),
+    ),
   },
 };
 

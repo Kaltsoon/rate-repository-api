@@ -17,8 +17,8 @@ const usersArgsSchema = yup.object({
   first: yup
     .number()
     .min(1)
-    .max(40)
-    .default(40),
+    .max(30)
+    .default(30),
 });
 
 export const resolvers = {

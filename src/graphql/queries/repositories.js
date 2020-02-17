@@ -30,8 +30,8 @@ const repositoriesArgsSchema = yup.object({
   first: yup
     .number()
     .min(1)
-    .max(40)
-    .default(40),
+    .max(30)
+    .default(30),
   orderDirection: yup.string().default('DESC'),
   orderBy: yup.string().default('CREATED_AT'),
   searchKeyword: yup.string().trim(),
