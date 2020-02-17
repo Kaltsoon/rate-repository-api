@@ -11,12 +11,27 @@
     "seed:make": "node ./node_modules/.bin/knex seed:make",
     "seed:run": "node ./node_modules/.bin/knex seed:run"
   },
+  "lint-staged": {
+    "src/**/*.js": [
+      "node ./node_modules/.bin/eslint",
+      "git add"
+    ],
+    "*.{js,json,css,md}": [
+      "node ./node_modules/.bin/prettier --write",
+      "git add"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Kaltsoon/rate-repository-api.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Kalle Ilves",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/Kaltsoon/rate-repository-api/issues"
   },

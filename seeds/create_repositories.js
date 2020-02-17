@@ -26,6 +26,6 @@ exports.seed = async knex => {
       owner_name: 'rzwitserloot',
       name: 'lombok',
       ...createDateColumns(new Date(Date.now() - 3 * oneHour)),
-    }
+    },
   ]);
 };
