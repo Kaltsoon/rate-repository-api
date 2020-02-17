@@ -79,4 +79,4 @@ GraphQL playground offers a documentation on how to use the API. Start the serve
 
 - **How to reset the database?** If you are absolutely sure that you wan't to remove _all_ the existing data, just remove the `database.sqlite` file in the `rate-repository-api` folder and run `npm run build`.
 
-- **Is this API production ready?** Almost, however current version of the API utilizes sqlite database, which is not quite suitable for production. Luckily, all database queries are performed with [Objection](https://vincit.github.io/objection.js/) ORM and changing the underlying database driver is just a matter of [configuration](http://knexjs.org/#Installation-client).
+- **Is this production ready?** Almost. The current version of the API utilizes sqlite database, which is not quite suitable for production. Luckily, all database queries are performed with [Objection](https://vincit.github.io/objection.js/) ORM and changing the underlying database driver is just a matter of [configuration](http://knexjs.org/#Installation-client).
