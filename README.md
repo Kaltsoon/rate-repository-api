@@ -16,7 +16,7 @@ This is a GraphQL API for the Rate Repository application.
 
 6. All done! Just run `npm start` to start the server. After the server has started you should be able to access the GraphQL playground at http://localhost:5000/graphql.
 
-## 🔑 Authorization 
+## 🔑 Authorization
 
 To list all the registered users, you can run this query in the GraphQL playground:
 
@@ -70,3 +70,7 @@ Replace the `<ACCESS_TOKEN>` part with your access token.
 ## 📖 Documentation
 
 GraphQL playground offers a documentation on how to use the API. Start the server by running `npm start`, open the GraphQL playground at http://localhost:5000/graphql and click "DOCS".
+
+## ❓ FAQ
+
+- **How to reset the database?** If you are absolutely sure that you wan't to remove _all_ the existing data, just remove the `database.sqlite` file in the `rate-repository-api` folder and run `npm run build`.
