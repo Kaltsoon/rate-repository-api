@@ -93,7 +93,9 @@ export const resolvers = {
     openIssuesCount: makeGithubRepositoryResolver(
       repository => get(repository, 'open_issues_count') || 0,
     ),
-    url: makeGithubRepositoryResolver(repository => get(repository, 'url')),
+    url: makeGithubRepositoryResolver(repository =>
+      get(repository, 'html_url'),
+    ),
     language: makeGithubRepositoryResolver(repository =>
       get(repository, 'language'),
     ),
