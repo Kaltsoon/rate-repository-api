@@ -16,7 +16,7 @@ export const typeDefs = gql`
     openIssuesCount: Int!
     createdAt: DateTime!
     fullName: String!
-    reviews: ReviewConnection!
+    reviews(first: Int, after: String): ReviewConnection!
     ratingAverage: Int!
     reviewCount: Int!
     url: String
