@@ -18,6 +18,7 @@ import createReviewMutation from './mutations/createReview';
 import Review from './types/Review';
 import ReviewConnection from './types/ReviewConnection';
 import UserConnection from './types/UserConnection';
+import deleteReviewMutation from './mutations/deleteReview';
 
 const rootTypeDefs = gql`
   type Query {
@@ -55,6 +56,7 @@ const typeDefs = [
   Review.typeDefs,
   ReviewConnection.typeDefs,
   UserConnection.typeDefs,
+  deleteReviewMutation.typeDefs,
 ];
 
 const resolvers = merge(
@@ -74,6 +76,7 @@ const resolvers = merge(
   Review.resolvers,
   ReviewConnection.resolvers,
   UserConnection.resolvers,
+  deleteReviewMutation.resolvers,
 );
 
 const createSchema = () => {

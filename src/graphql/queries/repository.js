@@ -2,15 +2,17 @@ import { gql } from 'apollo-server';
 
 export const typeDefs = gql`
   extend type Query {
+    """
+    Returns repository by an id.
+    """
     repository(id: String!): Repository
   }
 `;
 
 export const resolvers = {
   Query: {
-    repository: async (obj, args, { dataLoaders: { repositoryLoader } }) => {
-      return repositoryLoader.load(args.id);
-    },
+    repository: async (obj, args, { dataLoaders: { repositoryLoader } }) =>
+      repositoryLoader.load(args.id),
   },
 };
 

@@ -5,6 +5,9 @@ import createPaginatedQuery from '../../utils/createPaginatedQuery';
 
 export const typeDefs = gql`
   extend type Query {
+    """
+    Returns paginated users.
+    """
     users(first: Int, after: String): UserConnection!
   }
 `;

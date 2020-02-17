@@ -15,6 +15,9 @@ export const typeDefs = gql`
   }
 
   extend type Mutation {
+    """
+    Generates a new access token, if provided credentials (username and password) match any registered user.
+    """
     authorize(credentials: AuthorizeInput): AuthorizationPayload
   }
 `;

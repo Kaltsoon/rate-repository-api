@@ -11,6 +11,9 @@ export const typeDefs = gql`
   }
 
   extend type Query {
+    """
+    Returns paginated repositories.
+    """
     repositories(
       after: String
       first: Int

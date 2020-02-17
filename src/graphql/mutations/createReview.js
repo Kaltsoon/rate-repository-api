@@ -10,11 +10,15 @@ export const typeDefs = gql`
   }
 
   extend type Mutation {
+    """
+    Creates a review for the given repository defined by repositoryName and ownerName.
+    """
     createReview(review: CreateReviewInput): Review
   }
 `;
 
-const createRepositoryId = (ownerUsername, repositoryName) => [ownerUsername, repositoryName].join('/');
+const createRepositoryId = (ownerUsername, repositoryName) =>
+  [ownerUsername, repositoryName].join('/');
 
 const createReviewInputSchema = yup.object({
   repositoryName: yup
@@ -25,7 +29,12 @@ const createReviewInputSchema = yup.object({
     .string()
     .required()
     .trim(),
-  rating: yup.number().integer().min(0).max(100).required(),
+  rating: yup
+    .number()
+    .integer()
+    .min(0)
+    .max(100)
+    .required(),
   text: yup.string().trim(),
 });
 
@@ -47,16 +56,21 @@ export const resolvers = {
 
       const { repositoryName, ownerName } = normalizedReview;
 
-      const existingRepository = await Repository.query().findOne({ name: repositoryName, ownerName });
+      const existingRepository = await Repository.query().findOne({
+        name: repositoryName,
+        ownerName,
+      });
 
-      const repositoryId = existingRepository ? existingRepository.id : createRepositoryId(ownerName, repositoryName);
+      const repositoryId = existingRepository
+        ? existingRepository.id
+        : createRepositoryId(ownerName, repositoryName);
 
       if (!existingRepository) {
         const githubRepository = await githubClient.getRepository(
           ownerName,
           repositoryName,
         );
-  
+
         if (!githubRepository) {
           throw new UserInputError(
             `Could not fetch repository ${repositoryName} owned by ${ownerName} from GitHub`,

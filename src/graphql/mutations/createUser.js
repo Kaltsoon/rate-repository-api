@@ -10,6 +10,9 @@ export const typeDefs = gql`
   }
 
   extend type Mutation {
+    """
+    Creates a new user, if the provided username does not already exist.
+    """
     createUser(user: CreateUserInput): User
   }
 `;

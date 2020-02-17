@@ -2,6 +2,9 @@ import { gql } from 'apollo-server';
 
 export const typeDefs = gql`
   extend type Query {
+    """
+    Returns the authorized user.
+    """
     authorizedUser: User
   }
 `;
@@ -14,8 +17,8 @@ export const resolvers = {
       const userId = authService.assertIsAuthorized();
 
       return User.query().findById(userId);
-    }
-  }
+    },
+  },
 };
 
 export default {

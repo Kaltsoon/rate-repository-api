@@ -2,6 +2,9 @@ import { gql, UserInputError, ForbiddenError } from 'apollo-server';
 
 export const typeDefs = gql`
   extend type Mutation {
+    """
+    Deletes the review which has the given id, if it is created by the authorized user.
+    """
     deleteReview(id: String): Boolean
   }
 `;
@@ -24,7 +27,7 @@ export const resolvers = {
       await Review.query()
         .findById(args.id)
         .delete();
-      
+
       return true;
     },
   },
