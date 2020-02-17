@@ -1,5 +1,5 @@
 import { gql } from 'apollo-server';
-import { ref } from 'objection';
+import { raw } from 'objection';
 import * as yup from 'yup';
 
 import createPaginatedQuery from '../../utils/createPaginatedQuery';
@@ -47,7 +47,7 @@ const getLikeFilter = value => `%${value}%`;
 
 export const resolvers = {
   Query: {
-    repositories: async (obj, args, { models: { Repository, Review } }) => {
+    repositories: async (obj, args, { models: { Repository } }) => {
       const normalizedArgs = await repositoriesArgsSchema.validate(args);
       const {
         first,
@@ -77,11 +77,10 @@ export const resolvers = {
       if (orderColumn === 'ratingAverage') {
         query = query.select([
           'repositories.*',
-          Review.query()
-            .where({ repositoryId: ref('repositories.id') })
-            .avg('rating')
-            .as('ratingAverage')
-            .groupBy('repositoryId'),
+          // Missing reviews should have average of 0 not null
+          raw(
+            'coalesce((select avg(rating) as rating_average from reviews where repository_id = repositories.id group by repository_id), 0) as rating_average',
+          ),
         ]);
       }
 
