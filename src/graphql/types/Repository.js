@@ -10,19 +10,20 @@ export const typeDefs = gql`
     ownerName: String!
     name: String!
     user: User!
-    stargazersCount: Int!
-    watchersCount: Int!
-    forksCount: Int!
-    openIssuesCount: Int!
     createdAt: DateTime!
     fullName: String!
     reviews(first: Int, after: String): ReviewConnection!
     ratingAverage: Int!
     reviewCount: Int!
+    stargazersCount: Int
+    watchersCount: Int
+    forksCount: Int
+    openIssuesCount: Int
     url: String
     ownerAvatarUrl: String
     description: String
     language: String
+    authorizedUserHasReviewed: Boolean
   }
 `;
 
@@ -74,6 +75,15 @@ export const resolvers = {
       args,
       { dataLoaders: { repositoryReviewCountLoader } },
     ) => repositoryReviewCountLoader.load(id),
+    authorizedUserHasReviewed: (
+      { id },
+      args,
+      { dataLoaders: { userRepositoryReviewExistsLoader }, authService },
+    ) => {
+      const userId = authService.assertIsAuthorized();
+
+      return userRepositoryReviewExistsLoader.load([userId, id]);
+    },
     fullName: ({ ownerName, name }) => [ownerName, name].join('/'),
     ownerAvatarUrl: makeGithubRepositoryResolver(repository =>
       get(repository, 'owner.avatar_url'),

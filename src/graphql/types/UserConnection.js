@@ -7,8 +7,8 @@ export const typeDefs = gql`
   }
 
   type UserConnection {
-    pageInfo: PageInfo
-    edges: [UserEdge!]! 
+    pageInfo: PageInfo!
+    edges: [UserEdge!]!
   }
 `;
 

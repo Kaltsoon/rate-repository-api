@@ -1,24 +1,31 @@
 import DataLoader from 'dataloader';
 import { camelCase, isArray, find, zipObject } from 'lodash';
 
+const jsonCacheKeyFn = value => JSON.stringify(value);
+
 const createModelLoader = Model =>
-  new DataLoader(async ids => {
-    const idColumns = isArray(Model.idColumn)
-      ? Model.idColumn
-      : [Model.idColumn];
+  new DataLoader(
+    async ids => {
+      const idColumns = isArray(Model.idColumn)
+        ? Model.idColumn
+        : [Model.idColumn];
 
-    const camelCasedIdColumns = idColumns.map(id => camelCase(id));
+      const camelCasedIdColumns = idColumns.map(id => camelCase(id));
 
-    const results = await Model.query().findByIds(ids);
+      const results = await Model.query().findByIds(ids);
 
-    return ids.map(
-      id =>
-        find(
-          results,
-          zipObject(camelCasedIdColumns, isArray(id) ? id : [id]),
-        ) || null,
-    );
-  });
+      return ids.map(
+        id =>
+          find(
+            results,
+            zipObject(camelCasedIdColumns, isArray(id) ? id : [id]),
+          ) || null,
+      );
+    },
+    {
+      cacheKeyFn: jsonCacheKeyFn,
+    },
+  );
 
 const createRepositoryRatingAverageLoader = Review =>
   new DataLoader(async repositoryIds => {
@@ -50,6 +57,30 @@ const createRepositoryReviewCountLoader = Review =>
     });
   });
 
+const createUserRepositoryReviewExistsLoader = Review =>
+  new DataLoader(
+    async userIdRepositoryIdTuples => {
+      const userIds = userIdRepositoryIdTuples.map(([userId]) => userId);
+      const repositoryIds = userIdRepositoryIdTuples.map(
+        ([, repositoryId]) => repositoryId,
+      );
+
+      const reviews = await Review.query()
+        .whereIn('repositoryId', repositoryIds)
+        .andWhere(qb => qb.whereIn('userId', userIds))
+        .select('repositoryId', 'userId');
+
+      return userIdRepositoryIdTuples.map(([userId, repositoryId]) => {
+        return !!reviews.find(
+          r => r.userId === userId && r.repositoryId === repositoryId,
+        );
+      });
+    },
+    {
+      cacheKeyFn: jsonCacheKeyFn,
+    },
+  );
+
 export const createDataLoaders = ({ models }) => {
   return {
     repositoryLoader: createModelLoader(models.Repository),
@@ -59,6 +90,9 @@ export const createDataLoaders = ({ models }) => {
       models.Review,
     ),
     repositoryReviewCountLoader: createRepositoryReviewCountLoader(
+      models.Review,
+    ),
+    userRepositoryReviewExistsLoader: createUserRepositoryReviewExistsLoader(
       models.Review,
     ),
   };

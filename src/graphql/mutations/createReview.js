@@ -26,10 +26,12 @@ const createReviewInputSchema = yup.object({
   repositoryName: yup
     .string()
     .required()
+    .lowercase()
     .trim(),
   ownerName: yup
     .string()
     .required()
+    .lowercase()
     .trim(),
   rating: yup
     .number()

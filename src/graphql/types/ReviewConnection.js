@@ -7,8 +7,8 @@ export const typeDefs = gql`
   }
 
   type ReviewConnection {
-    pageInfo: PageInfo
-    edges: [ReviewEdge!]! 
+    pageInfo: PageInfo!
+    edges: [ReviewEdge!]!
   }
 `;
 

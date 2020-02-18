@@ -7,8 +7,8 @@ export const typeDefs = gql`
   }
 
   type RepositoryConnection {
-    pageInfo: PageInfo
-    edges: [RepositoryEdge!]! 
+    pageInfo: PageInfo!
+    edges: [RepositoryEdge!]!
   }
 `;
 

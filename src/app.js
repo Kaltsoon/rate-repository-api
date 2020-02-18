@@ -2,7 +2,7 @@ import Koa from 'koa';
 import cors from '@koa/cors';
 import morgan from 'koa-morgan';
 import bodyParser from 'koa-bodyparser';
-import { ApolloServer, toApolloError } from 'apollo-server-koa';
+import { ApolloServer, toApolloError, ApolloError } from 'apollo-server-koa';
 import { ValidationError } from 'yup';
 
 import { ApplicationError, NotFoundError } from './errors';
@@ -27,13 +27,18 @@ const errorHandler = () => async (ctx, next) => {
 
 const createApolloErrorFormatter = logger => {
   return error => {
-    let normalizedError = error;
+    logger.error(error);
+
+    let normalizedError = new ApolloError(
+      'Something went wrong',
+      'INTERNAL_SERVER_ERROR',
+    );
 
     if (error.originalError instanceof ValidationError) {
       normalizedError = toApolloError(error, 'BAD_USER_INPUT');
+    } else if (error.originalError instanceof ApolloError) {
+      normalizedError = error;
     }
-
-    logger.error(normalizedError);
 
     return normalizedError;
   };
