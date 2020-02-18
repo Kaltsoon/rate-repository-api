@@ -1,5 +1,7 @@
-import { gql, UserInputError } from 'apollo-server';
+import { gql } from 'apollo-server';
 import * as yup from 'yup';
+
+import { GithubRepositoryNotFoundError } from '../../utils/githubClient';
 
 export const typeDefs = gql`
   input CreateReviewInput {
@@ -72,8 +74,9 @@ export const resolvers = {
         );
 
         if (!githubRepository) {
-          throw new UserInputError(
-            `Could not fetch repository ${repositoryName} owned by ${ownerName} from GitHub`,
+          throw GithubRepositoryNotFoundError.fromNames(
+            ownerName,
+            repositoryName,
           );
         }
 

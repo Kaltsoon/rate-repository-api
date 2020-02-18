@@ -2,7 +2,8 @@ import Koa from 'koa';
 import cors from '@koa/cors';
 import morgan from 'koa-morgan';
 import bodyParser from 'koa-bodyparser';
-import { ApolloServer } from 'apollo-server-koa';
+import { ApolloServer, toApolloError } from 'apollo-server-koa';
+import { ValidationError } from 'yup';
 
 import { ApplicationError, NotFoundError } from './errors';
 import createAuthService from './utils/authService';
@@ -24,6 +25,20 @@ const errorHandler = () => async (ctx, next) => {
   }
 };
 
+const createApolloErrorFormatter = logger => {
+  return error => {
+    let normalizedError = error;
+
+    if (error.originalError instanceof ValidationError) {
+      normalizedError = toApolloError(error, 'BAD_USER_INPUT');
+    }
+
+    logger.error(normalizedError);
+
+    return normalizedError;
+  };
+};
+
 export default ({ logStream, context, schema, config } = {}) => {
   const app = new Koa();
 
@@ -31,6 +46,7 @@ export default ({ logStream, context, schema, config } = {}) => {
     schema,
     playground: true,
     introspection: true,
+    formatError: createApolloErrorFormatter(context.logger),
     context: ({ ctx }) => {
       const authorization = ctx.request.get('Authorization');
 

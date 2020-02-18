@@ -1,4 +1,4 @@
-import { gql } from 'apollo-server';
+import { gql, ApolloError } from 'apollo-server';
 import * as yup from 'yup';
 import uuid from 'uuid/v4';
 import bcrypt from 'bcrypt';
@@ -16,6 +16,19 @@ export const typeDefs = gql`
     createUser(user: CreateUserInput): User
   }
 `;
+
+class UsernameTakenError extends ApolloError {
+  constructor(message, properties) {
+    super(message, 'USERNAME_TAKEN', properties);
+  }
+
+  static fromUsername(username) {
+    return new UsernameTakenError(
+      `Username ${username} is already taken. Choose another username`,
+      { username },
+    );
+  }
+}
 
 const createUserInputSchema = yup.object({
   username: yup
@@ -40,6 +53,14 @@ export const resolvers = {
       });
 
       const passwordHash = await bcrypt.hash(normalizedUser.password, 10);
+
+      const existingUser = await User.query().where({
+        username: normalizedUser.username,
+      });
+
+      if (existingUser) {
+        throw UsernameTakenError.fromUsername(normalizedUser.username);
+      }
 
       const id = uuid();
 
