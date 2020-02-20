@@ -35,6 +35,7 @@ const createUserInputSchema = yup.object({
     .string()
     .min(1)
     .max(100)
+    .lowercase()
     .trim(),
   password: yup
     .string()

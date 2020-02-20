@@ -29,14 +29,17 @@ const createApolloErrorFormatter = logger => {
   return error => {
     logger.error(error);
 
+    const { originalError } = error;
+    const isGraphQLError = !(originalError instanceof Error);
+
     let normalizedError = new ApolloError(
       'Something went wrong',
       'INTERNAL_SERVER_ERROR',
     );
 
-    if (error.originalError instanceof ValidationError) {
+    if (originalError instanceof ValidationError) {
       normalizedError = toApolloError(error, 'BAD_USER_INPUT');
-    } else if (error.originalError instanceof ApolloError) {
+    } else if (error.originalError instanceof ApolloError || isGraphQLError) {
       normalizedError = error;
     }
 

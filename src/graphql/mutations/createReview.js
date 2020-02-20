@@ -1,4 +1,4 @@
-import { gql } from 'apollo-server';
+import { gql, UserInputError } from 'apollo-server';
 import * as yup from 'yup';
 
 import { GithubRepositoryNotFoundError } from '../../utils/githubClient';
@@ -90,6 +90,12 @@ export const resolvers = {
       }
 
       const id = [userId, repositoryId].join('.');
+
+      const existringReview = await Review.query().findById(id);
+
+      if (existringReview) {
+        throw new UserInputError('User has already review the repository');
+      }
 
       await Review.query().insert({
         id,
