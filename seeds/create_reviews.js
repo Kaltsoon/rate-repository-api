@@ -12,10 +12,10 @@ const kalleId = 'bbe42984-051b-4a01-b45d-b8d29c32200c';
 const elinaId = 'cff8872a-8ff5-4092-ac2f-d79e65f18aa2';
 const mattiId = '1b10e4d8-57ee-4d00-8886-e4a049d7ff8f';
 
-const formikId = 'jaredpalmer/formik';
-const reactAsyncId = 'async-library/react-async';
-const railsId = 'rails/rails';
-const djangoId = 'django/django';
+const formikId = 'jaredpalmer.formik';
+const reactAsyncId = 'async-library.react-async';
+const railsId = 'rails.rails';
+const djangoId = 'django.django';
 
 const createReviewId = (userId, repositoryId) =>
   [userId, repositoryId].join('.');

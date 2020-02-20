@@ -5,6 +5,20 @@ export class BaseModel extends Model {
     return true;
   }
 
+  $parseDatabaseJson(json) {
+    let parsedJson = super.$parseDatabaseJson(json);
+
+    if (typeof parsedJson.createdAt === 'number') {
+      parsedJson.createdAt = new Date(parsedJson.createdAt);
+    }
+
+    if (typeof parsedJson.updatedAt === 'number') {
+      parsedJson.updatedAt = new Date(parsedJson.updatedAt);
+    }
+
+    return parsedJson;
+  }
+
   $beforeInsert() {
     if (!this.createdAt) {
       this.createdAt = new Date().toISOString();

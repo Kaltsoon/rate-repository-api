@@ -56,7 +56,7 @@ export default ({ logStream, context, schema, config } = {}) => {
     introspection: true,
     formatError: createApolloErrorFormatter(context.logger),
     context: ({ ctx }) => {
-      const authorization = ctx.request.get('Authorization');
+      const authorization = ctx.request.get('authorization');
 
       const accessToken = authorization
         ? authorization.split(' ')[1]

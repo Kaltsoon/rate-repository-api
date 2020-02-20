@@ -26,6 +26,7 @@ const authorizeInputSchema = yup.object({
   username: yup
     .string()
     .required()
+    .lowercase()
     .trim(),
   password: yup
     .string()

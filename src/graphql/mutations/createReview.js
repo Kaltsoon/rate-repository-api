@@ -20,7 +20,7 @@ export const typeDefs = gql`
 `;
 
 const createRepositoryId = (ownerUsername, repositoryName) =>
-  [ownerUsername, repositoryName].join('/');
+  [ownerUsername, repositoryName].join('.');
 
 const createReviewInputSchema = yup.object({
   repositoryName: yup

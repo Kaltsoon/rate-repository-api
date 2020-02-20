@@ -10,31 +10,31 @@ exports.seed = async knex => {
 
   await knex('repositories').insert([
     {
-      id: 'jaredpalmer/formik',
+      id: 'jaredpalmer.formik',
       owner_name: 'jaredpalmer',
       name: 'formik',
       ...createDateColumns(new Date(Date.now() - oneHour)),
     },
     {
-      id: 'async-library/react-async',
+      id: 'async-library.react-async',
       owner_name: 'async-library',
       name: 'react-async',
       ...createDateColumns(new Date(Date.now() - 2 * oneHour)),
     },
     {
-      id: 'rzwitserloot/lombok',
+      id: 'rzwitserloot.lombok',
       owner_name: 'rzwitserloot',
       name: 'lombok',
       ...createDateColumns(new Date(Date.now() - 3 * oneHour)),
     },
     {
-      id: 'rails/rails',
+      id: 'rails.rails',
       owner_name: 'rails',
       name: 'rails',
       ...createDateColumns(new Date(Date.now() - 4 * oneHour)),
     },
     {
-      id: 'django/django',
+      id: 'django.django',
       owner_name: 'django',
       name: 'django',
       ...createDateColumns(new Date(Date.now() - 5 * oneHour)),

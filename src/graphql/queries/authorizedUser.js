@@ -14,7 +14,11 @@ export const resolvers = {
     authorizedUser: (obj, args, { models, authService }) => {
       const { User } = models;
 
-      const userId = authService.assertIsAuthorized();
+      const userId = authService.getUserId();
+
+      if (!userId) {
+        return null;
+      }
 
       return User.query().findById(userId);
     },
