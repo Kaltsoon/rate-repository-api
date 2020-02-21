@@ -1,8 +1,6 @@
 import { makeExecutableSchema, gql } from 'apollo-server';
 import { merge } from 'lodash';
 
-import { GraphQLDateTime } from 'graphql-iso-date';
-
 import Repository from './types/Repository';
 import repositoryQuery from './queries/repository';
 import User from './types/User';
@@ -19,6 +17,7 @@ import Review from './types/Review';
 import ReviewConnection from './types/ReviewConnection';
 import UserConnection from './types/UserConnection';
 import deleteReviewMutation from './mutations/deleteReview';
+import DateTime from './scalars/DateTime';
 
 const rootTypeDefs = gql`
   type Query {
@@ -30,17 +29,9 @@ const rootTypeDefs = gql`
   }
 `;
 
-const scalarTypeDefs = gql`
-  scalar DateTime
-`;
-
-const scalarResolvers = {
-  DateTime: GraphQLDateTime,
-};
-
 const typeDefs = [
   rootTypeDefs,
-  scalarTypeDefs,
+  DateTime.typeDefs,
   Repository.typeDefs,
   repositoryQuery.typeDefs,
   User.typeDefs,
@@ -60,7 +51,7 @@ const typeDefs = [
 ];
 
 const resolvers = merge(
-  scalarResolvers,
+  DateTime.resolvers,
   Repository.resolvers,
   repositoryQuery.resolvers,
   User.resolvers,

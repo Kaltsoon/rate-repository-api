@@ -1,3 +1,5 @@
+import { get, last, first } from 'lodash';
+
 const serializeCursor = data =>
   Buffer.from(JSON.stringify(data)).toString('base64');
 
@@ -13,7 +15,7 @@ const getComparator = orderDirection => (orderDirection === 'asc' ? '>' : '<');
 
 const createPaginationQuery = async (getQuery, options = {}) => {
   const {
-    first = 40,
+    first: firstCount = 30,
     after,
     orderDirection = 'asc',
     orderColumn,
@@ -26,6 +28,8 @@ const createPaginationQuery = async (getQuery, options = {}) => {
 
   if (parsedCursor) {
     const [idValue, orderColumnValue] = parsedCursor;
+
+    console.log(parsedCursor);
 
     paginatedQuery = paginatedQuery
       .where(orderColumn, getComparator(orderDirection), orderColumnValue)
@@ -41,12 +45,14 @@ const createPaginationQuery = async (getQuery, options = {}) => {
       { column: orderColumn, order: orderDirection },
       { column: idColumn, order: orderDirection },
     ])
-    .limit(first + 1);
+    .limit(firstCount + 1);
 
   const totalCount = await getQuery().count('*', { as: 'count' });
   const data = await paginatedQuery;
 
-  const edges = data.slice(0, first).map(d => ({
+  console.log(data);
+
+  const edges = data.slice(0, firstCount).map(d => ({
     node: d,
     cursor: serializeCursor([d[idColumn], d[orderColumn]]),
   }));
@@ -54,7 +60,9 @@ const createPaginationQuery = async (getQuery, options = {}) => {
   return {
     pageInfo: {
       totalCount: totalCount[0]['count'],
-      hasNextPage: data.length > first,
+      hasNextPage: data.length > firstCount,
+      endCursor: get(last(edges), 'cursor'),
+      startCursor: get(first(edges), 'cursor'),
     },
     edges,
   };

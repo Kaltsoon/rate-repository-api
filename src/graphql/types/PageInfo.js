@@ -4,6 +4,8 @@ export const typeDefs = gql`
   type PageInfo {
     hasNextPage: Boolean!
     totalCount: Int!
+    startCursor: String
+    endCursor: String
   }
 `;
 
