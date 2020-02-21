@@ -1,4 +1,4 @@
-import { gql, UserInputError } from 'apollo-server';
+import { gql, ApolloError } from 'apollo-server';
 import * as yup from 'yup';
 
 import { GithubRepositoryNotFoundError } from '../../utils/githubClient';
@@ -19,10 +19,16 @@ export const typeDefs = gql`
   }
 `;
 
+class RepositoryAlreadyReviewedError extends ApolloError {
+  constructor(message = 'User has already reviewed this repository') {
+    super(message, 'REPOSITORY_ALREADY_REVIEWED');
+  }
+}
+
 const createRepositoryId = (ownerUsername, repositoryName) =>
   [ownerUsername, repositoryName].join('.');
 
-const createReviewInputSchema = yup.object({
+const createReviewInputSchema = yup.object().shape({
   repositoryName: yup
     .string()
     .required()
@@ -39,7 +45,10 @@ const createReviewInputSchema = yup.object({
     .min(0)
     .max(100)
     .required(),
-  text: yup.string().trim(),
+  text: yup
+    .string()
+    .max(2000)
+    .trim(),
 });
 
 export const resolvers = {
@@ -94,7 +103,7 @@ export const resolvers = {
       const existringReview = await Review.query().findById(id);
 
       if (existringReview) {
-        throw new UserInputError('User has already review the repository');
+        throw new RepositoryAlreadyReviewedError();
       }
 
       await Review.query().insert({

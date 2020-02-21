@@ -29,8 +29,6 @@ const createPaginationQuery = async (getQuery, options = {}) => {
   if (parsedCursor) {
     const [idValue, orderColumnValue] = parsedCursor;
 
-    console.log(parsedCursor);
-
     paginatedQuery = paginatedQuery
       .where(orderColumn, getComparator(orderDirection), orderColumnValue)
       .orWhere(qb =>
@@ -49,8 +47,6 @@ const createPaginationQuery = async (getQuery, options = {}) => {
 
   const totalCount = await getQuery().count('*', { as: 'count' });
   const data = await paginatedQuery;
-
-  console.log(data);
 
   const edges = data.slice(0, firstCount).map(d => ({
     node: d,

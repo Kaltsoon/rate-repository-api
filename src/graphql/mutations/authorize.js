@@ -22,7 +22,7 @@ export const typeDefs = gql`
   }
 `;
 
-const authorizeInputSchema = yup.object({
+const authorizeInputSchema = yup.object().shape({
   username: yup
     .string()
     .required()

@@ -5,7 +5,7 @@ export const typeDefs = gql`
     """
     Returns repository by an id.
     """
-    repository(id: String!): Repository
+    repository(id: ID!): Repository
   }
 `;
 
