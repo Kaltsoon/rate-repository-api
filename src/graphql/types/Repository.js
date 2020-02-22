@@ -80,9 +80,11 @@ export const resolvers = {
       args,
       { dataLoaders: { userRepositoryReviewExistsLoader }, authService },
     ) => {
-      const userId = authService.assertIsAuthorized();
+      const userId = authService.getUserId();
 
-      return userRepositoryReviewExistsLoader.load([userId, id]);
+      return userId
+        ? userRepositoryReviewExistsLoader.load([userId, id])
+        : null;
     },
     fullName: ({ ownerName, name }) => [ownerName, name].join('/'),
     ownerAvatarUrl: makeGithubRepositoryResolver(repository =>
