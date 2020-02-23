@@ -5,39 +5,47 @@ const createDateColumns = date => ({
   updated_at: date,
 });
 
+const createColumns = (ownerName, repositoryName) => ({
+  id: `${ownerName}.${repositoryName}`,
+  owner_name: ownerName,
+  name: repositoryName,
+});
+
 exports.seed = async knex => {
   await knex('repositories').del();
 
   await knex('repositories').insert([
     {
-      id: 'jaredpalmer.formik',
-      owner_name: 'jaredpalmer',
-      name: 'formik',
+      ...createColumns('jaredpalmer', 'formik'),
       ...createDateColumns(new Date(Date.now() - oneHour)),
     },
     {
-      id: 'async-library.react-async',
-      owner_name: 'async-library',
-      name: 'react-async',
+      ...createColumns('async-library', 'react-async'),
       ...createDateColumns(new Date(Date.now() - 2 * oneHour)),
     },
     {
-      id: 'rzwitserloot.lombok',
-      owner_name: 'rzwitserloot',
-      name: 'lombok',
+      ...createColumns('rzwitserloot', 'lombok'),
       ...createDateColumns(new Date(Date.now() - 3 * oneHour)),
     },
     {
-      id: 'rails.rails',
-      owner_name: 'rails',
-      name: 'rails',
+      ...createColumns('rails', 'rails'),
       ...createDateColumns(new Date(Date.now() - 4 * oneHour)),
     },
     {
-      id: 'django.django',
-      owner_name: 'django',
-      name: 'django',
+      ...createColumns('django', 'django'),
       ...createDateColumns(new Date(Date.now() - 5 * oneHour)),
+    },
+    {
+      ...createColumns('apollographql', 'apollo-client'),
+      ...createDateColumns(new Date(Date.now() - 6 * oneHour)),
+    },
+    {
+      ...createColumns('reduxjs', 'redux'),
+      ...createDateColumns(new Date(Date.now() - 7 * oneHour)),
+    },
+    {
+      ...createColumns('spring-projects', 'spring-framework'),
+      ...createDateColumns(new Date(Date.now() - 8 * oneHour)),
     },
   ]);
 };
