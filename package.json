@@ -5,11 +5,13 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./src/index.js",
-    "migrate:make": "node ./node_modules/.bin/knex migrate:make",
-    "migrate:latest": "node ./node_modules/.bin/knex migrate:latest",
+    "lint": "eslint ./src",
+    "test": "jest .",
+    "migrate:make": "knex migrate:make",
+    "migrate:latest": "knex migrate:latest",
     "build": "touch database.sqlite && npm run migrate:latest",
-    "seed:make": "node ./node_modules/.bin/knex seed:make",
-    "seed:run": "node ./node_modules/.bin/knex seed:run"
+    "seed:make": "knex seed:make",
+    "seed:run": "knex seed:run"
   },
   "lint-staged": {
     "src/**/*.js": [
@@ -63,9 +65,13 @@
     "yup": "^0.28.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.8.4",
+    "@babel/preset-env": "^7.8.4",
     "babel-eslint": "^10.0.3",
     "eslint": "^6.8.0",
+    "eslint-plugin-jest": "^23.8.0",
     "husky": "^4.2.3",
+    "jest": "^25.1.0",
     "lint-staged": "^10.0.7",
     "prettier": "^1.19.1"
   }
