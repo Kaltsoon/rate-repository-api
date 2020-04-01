@@ -4,10 +4,10 @@ export class ApplicationError extends ExtendableError {
   constructor(message, properties = {}) {
     super();
 
-    this.message = message;
+    this.message = message || 'Something went wrong';
     this.properties = properties;
     this.statusCode = 500;
-    this.type = 'APPLICATION_ERROR';
+    this.code = 'APPLICATION_ERROR';
   }
 
   toJson() {
@@ -15,16 +15,16 @@ export class ApplicationError extends ExtendableError {
       message: this.message,
       properties: this.properties,
       statusCode: this.statusCode,
-      type: this.type,
+      code: this.code,
     };
   }
 }
 
 export class NotFoundError extends ApplicationError {
   constructor(message, properties = {}) {
-    super(message, properties);
+    super(message || 'The requested resource is not found', properties);
 
     this.statusCode = 404;
-    this.type = 'NOT_FOUND_ERROR';
+    this.code = 'NOT_FOUND_ERROR';
   }
 }

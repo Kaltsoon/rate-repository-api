@@ -12,13 +12,13 @@ Node (versions equal or above `12.0.0` are preferred) and npm. If you haven't in
 
 1. Clone this repository and run `npm install` in the `rate-repository-api` folder.
 
-2. Run `npm run build`. This will setup the sqlite database and run the migrations.
+2. Rate Repository API uses the GitHub API, which has quite small rate limit (60 per requests per hour) for unauthorized requests. Therefore, we need to register it as an OAuth application to obtain client credentials. Register your OAuth application [here](https://github.com/settings/applications/new) by setting "Application name" as "Rate Repository API", "Homepage URL" as https://github.com/Kaltsoon/rate-repository-api and "Authorization callback URL" as http://localhost:5000. Now you should see your application [here](https://github.com/settings/developers) and by going to the application's page, see the "Client ID" and "Client Secret" values.
 
-3. **(Optional)** To populate the database with some seed data you can run `npm run seed:run`. **Note:** running this command will remove all existing data.
+3. Rename the `.env.template` file in the `rate-repository-api` folder to `.env`. And replace `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` variable values with your newly registered OAuth application's credentials.
 
-4. Rate Repository API uses the GitHub API, which has quite small rate limit (60 per requests per hour) for unauthorized requests. Therefore, we need to register it as an OAuth application to obtain client credentials. Register your OAuth application [here](https://github.com/settings/applications/new) by setting "Application name" as "Rate Repository API", "Homepage URL" as https://github.com/Kaltsoon/rate-repository-api and "Authorization callback URL" as http://localhost:5000. Now you should see your application [here](https://github.com/settings/developers) and by going to the application's page, see the "Client ID" and "Client Secret" values.
+4. Run `npm run build`. This will setup the sqlite database and run the migrations.
 
-5. Rename the `.env.template` file in the `rate-repository-api` folder to `.env`. And replace `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` variable values with your newly registered OAuth application's credentials.
+5. **(Optional)** To populate the database with some seed data you can run `npm run seed:run`. **Note:** running this command will remove all existing data.
 
 6. All done! Just run `npm start` to start the server. After the server has started you should be able to access the GraphQL playground at http://localhost:5000/graphql.
 

@@ -4,10 +4,12 @@ import morgan from 'koa-morgan';
 import bodyParser from 'koa-bodyparser';
 import { ApolloServer, toApolloError, ApolloError } from 'apollo-server-koa';
 import { ValidationError } from 'yup';
+import Router from 'koa-router';
 
 import { ApplicationError, NotFoundError } from './errors';
 import createAuthService from './utils/authService';
 import createDataLoaders from './utils/dataLoaders';
+import api from './api';
 
 const errorHandler = () => async (ctx, next) => {
   try {
@@ -83,6 +85,12 @@ export default ({ logStream, context, schema, config } = {}) => {
   }
 
   app.use(cors());
+
+  const apiRouter = new Router();
+
+  apiRouter.use('/api', api.routes());
+
+  app.use(apiRouter.routes());
 
   apolloServer.applyMiddleware({ app });
 
