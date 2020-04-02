@@ -21,7 +21,7 @@ const errorHandler = () => async (ctx, next) => {
         : new ApplicationError('Something went wrong');
 
     ctx.status = normalizedError.statusCode || 500;
-    ctx.body = normalizedError.toJson();
+    ctx.body = normalizedError;
 
     ctx.logger.error(e, { path: ctx.request.path });
   }

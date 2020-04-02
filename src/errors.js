@@ -1,16 +1,16 @@
 import ExtendableError from 'es6-error';
 
 export class ApplicationError extends ExtendableError {
-  constructor(message, properties = {}) {
-    super();
+  constructor(message, properties, statusCode, code) {
+    super(message);
 
     this.message = message || 'Something went wrong';
-    this.properties = properties;
-    this.statusCode = 500;
-    this.code = 'APPLICATION_ERROR';
+    this.properties = properties || null;
+    this.statusCode = statusCode || 500;
+    this.code = code || 'INTERNAL_SERVER_ERROR';
   }
 
-  toJson() {
+  toJSON() {
     return {
       message: this.message,
       properties: this.properties,
@@ -21,10 +21,12 @@ export class ApplicationError extends ExtendableError {
 }
 
 export class NotFoundError extends ApplicationError {
-  constructor(message, properties = {}) {
-    super(message || 'The requested resource is not found', properties);
-
-    this.statusCode = 404;
-    this.code = 'NOT_FOUND_ERROR';
+  constructor(message, properties) {
+    super(
+      message || 'The requested resource is not found',
+      properties,
+      404,
+      'NOT_FOUND',
+    );
   }
 }
