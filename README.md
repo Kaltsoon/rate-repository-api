@@ -10,11 +10,11 @@ Node (versions equal or above `12.0.0` are preferred) and npm. If you haven't in
 
 ## 🚀 Getting started
 
-1. Clone this repository and run `npm install` in the `rate-repository-api` folder.
+1. Clone this repository and run `npm install` in the `rate-repository-api` directory.
 
 2. Rate Repository API uses the GitHub API, which has quite small rate limit (60 per requests per hour) for unauthorized requests. Therefore, we need to register it as an OAuth application to obtain client credentials. Register your OAuth application [here](https://github.com/settings/applications/new) by setting "Application name" as "Rate Repository API", "Homepage URL" as https://github.com/Kaltsoon/rate-repository-api and "Authorization callback URL" as http://localhost:5000. Now you should see your application [here](https://github.com/settings/developers) and by going to the application's page, see the "Client ID" and "Client Secret" values.
 
-3. Rename the `.env.template` file in the `rate-repository-api` folder to `.env`. And replace `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` variable values with your newly registered OAuth application's credentials.
+3. Rename the `.env.template` file in the `rate-repository-api` directory to `.env`. And replace `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` variable values with your newly registered OAuth application's credentials.
 
 4. Run `npm run build`. This will setup the sqlite database and run the migrations.
 
@@ -77,8 +77,12 @@ Replace the `<ACCESS_TOKEN>` part with your access token.
 
 GraphQL playground offers a documentation on how to use the API. Start the server by running `npm start`, open the GraphQL playground at http://localhost:5000/graphql and click "DOCS".
 
+## 🐛 Found a bug?
+
+Submit an issue with the bug description and a way to reproduce the bug. If you have already come up with a solution, we will gladly accept a pull request.
+
 ## ❓ FAQ
 
-- **How to reset the database?** If you are absolutely sure that you wan't to remove _all_ the existing data, just remove the `database.sqlite` file in the `rate-repository-api` folder and run `npm run build`. You can run `npm run seed:run` to initialize the new database with seed data.
+- **How to reset the database?** If you are absolutely sure that you want to remove _all_ the existing data, just remove the `database.sqlite` file in the `rate-repository-api` directory and run `npm run build`. You can run `npm run seed:run` to initialize the new database with seed data.
 
 - **Is this production ready?** Almost. The current version of the API utilizes sqlite database, which is not quite suitable for production. Luckily, all database queries are performed with [Objection](https://vincit.github.io/objection.js/) ORM and changing the underlying database driver is just a matter of [configuration](http://knexjs.org/#Installation-client).
