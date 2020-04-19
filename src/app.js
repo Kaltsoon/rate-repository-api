@@ -84,6 +84,11 @@ export default ({ logStream, context, schema, config } = {}) => {
     app.use(morgan('combined', { stream: logStream }));
   }
 
+  app.use(async (ctx, next) => {
+    ctx.dataLoaders = createDataLoaders({ models: context.models });
+    await next();
+  });
+
   app.use(cors());
 
   const apiRouter = new Router();
