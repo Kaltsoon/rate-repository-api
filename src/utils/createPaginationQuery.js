@@ -45,8 +45,10 @@ const createPaginationQuery = async (getQuery, options = {}) => {
     ])
     .limit(firstCount + 1);
 
-  const totalCount = await getQuery().count('*', { as: 'count' });
-  const data = await paginatedQuery;
+  const [totalCount, data] = await Promise.all([
+    getQuery().count('*', { as: 'count' }),
+    paginatedQuery,
+  ]);
 
   const edges = data.slice(0, firstCount).map(d => ({
     node: d,
