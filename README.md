@@ -1,4 +1,4 @@
-![CI](https://github.com/Kaltsoon/rate-repository-api/workflows/CI/badge.svg)
+![CI](https://github.com/fullstack-hy2020/rate-repository-api/workflows/CI/badge.svg)
 
 # Rate Repository API
 
