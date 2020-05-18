@@ -49,6 +49,7 @@ export const resolvers = {
   Query: {
     repositories: async (obj, args, { models: { Repository } }) => {
       const normalizedArgs = await repositoriesArgsSchema.validate(args);
+
       const {
         first,
         orderDirection,

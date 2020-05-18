@@ -47,5 +47,13 @@ exports.seed = async knex => {
       ...createColumns('spring-projects', 'spring-framework'),
       ...createDateColumns(new Date(Date.now() - 8 * oneHour)),
     },
+    {
+      ...createColumns('zeit', 'next.js'),
+      ...createDateColumns(new Date(Date.now() - 9 * oneHour)),
+    },
+    {
+      ...createColumns('zeit', 'swr'),
+      ...createDateColumns(new Date(Date.now() - 10 * oneHour)),
+    },
   ]);
 };
