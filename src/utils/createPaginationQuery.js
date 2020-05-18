@@ -29,13 +29,17 @@ const createPaginationQuery = async (getQuery, options = {}) => {
   if (parsedCursor) {
     const [idValue, orderColumnValue] = parsedCursor;
 
-    paginatedQuery = paginatedQuery
-      .where(orderColumn, getComparator(orderDirection), orderColumnValue)
-      .orWhere(qb =>
+    paginatedQuery = paginatedQuery.andWhere(qb => {
+      qb.where(
+        orderColumn,
+        getComparator(orderDirection),
+        orderColumnValue,
+      ).orWhere(qb =>
         qb
           .where(orderColumn, '=', orderColumnValue)
           .andWhere(idColumn, getComparator(orderDirection), idValue),
       );
+    });
   }
 
   paginatedQuery = paginatedQuery
