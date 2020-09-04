@@ -5,7 +5,7 @@ export const typeDefs = gql`
     """
     Deletes the review which has the given id, if it is created by the authorized user.
     """
-    deleteReview(id: String): Boolean
+    deleteReview(id: ID!): Boolean
   }
 `;
 

@@ -34,5 +34,17 @@ exports.seed = async knex => {
       ...commonColumns,
       ...createDateColumns(new Date(Date.now() - 3 * oneHour)),
     },
+    {
+      id: '9b9d927e-2ee9-4f93-b96b-c8f677c63a5f',
+      username: 'johndoe',
+      ...commonColumns,
+      ...createDateColumns(new Date(Date.now() - 4 * oneHour)),
+    },
+    {
+      id: '753f3e99-e73a-43a3-9a50-b30d7727c0eb',
+      username: 'leeroyjenkins',
+      ...commonColumns,
+      ...createDateColumns(new Date(Date.now() - 5 * oneHour)),
+    },
   ]);
 };

@@ -11,16 +11,18 @@ export const typeDefs = gql`
 
 export const resolvers = {
   Query: {
-    authorizedUser: (obj, args, { models, authService }) => {
-      const { User } = models;
-
+    authorizedUser: (
+      obj,
+      args,
+      { dataLoaders: { userLoader }, authService },
+    ) => {
       const userId = authService.getUserId();
 
       if (!userId) {
         return null;
       }
 
-      return User.query().findById(userId);
+      return userLoader.load(userId);
     },
   },
 };

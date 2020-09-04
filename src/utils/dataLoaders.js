@@ -81,6 +81,21 @@ const createUserRepositoryReviewExistsLoader = Review =>
     },
   );
 
+const createUserReviewCountLoader = Review =>
+  new DataLoader(async userIds => {
+    const reviews = await Review.query()
+      .whereIn('userId', userIds)
+      .count('*', { as: 'reviewsCount' })
+      .groupBy('userId')
+      .select('userId');
+
+    return userIds.map(id => {
+      const review = reviews.find(({ userId }) => userId === id);
+
+      return review ? review.reviewsCount : 0;
+    });
+  });
+
 export const createDataLoaders = ({ models }) => {
   return {
     repositoryLoader: createModelLoader(models.Repository),
@@ -95,6 +110,7 @@ export const createDataLoaders = ({ models }) => {
     userRepositoryReviewExistsLoader: createUserRepositoryReviewExistsLoader(
       models.Review,
     ),
+    userReviewCountLoader: createUserReviewCountLoader(models.Review),
   };
 };
 

@@ -9,6 +9,7 @@ export const typeDefs = gql`
     username: String!
     createdAt: DateTime!
     reviews(first: Int, after: String): ReviewConnection!
+    reviewCount: Int!
   }
 `;
 
@@ -39,6 +40,11 @@ export const resolvers = {
         },
       );
     },
+    reviewCount: async (
+      { id },
+      args,
+      { dataLoaders: { userReviewCountLoader } },
+    ) => userReviewCountLoader.load(id),
   },
 };
 

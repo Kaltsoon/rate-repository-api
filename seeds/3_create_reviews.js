@@ -11,6 +11,8 @@ const loremIpsum =
 const kalleId = 'bbe42984-051b-4a01-b45d-b8d29c32200c';
 const elinaId = 'cff8872a-8ff5-4092-ac2f-d79e65f18aa2';
 const mattiId = '1b10e4d8-57ee-4d00-8886-e4a049d7ff8f';
+const johndoeId = '9b9d927e-2ee9-4f93-b96b-c8f677c63a5f';
+const leeroyjenkinsId = '753f3e99-e73a-43a3-9a50-b30d7727c0eb';
 
 const formikId = 'jaredpalmer.formik';
 const reactAsyncId = 'async-library.react-async';
@@ -30,7 +32,7 @@ exports.seed = async knex => {
   await knex('reviews').del();
 
   await knex('reviews').insert([
-    // Kalle's reviews
+    // kalle's reviews
     {
       rating: 95,
       text: loremIpsum,
@@ -55,7 +57,7 @@ exports.seed = async knex => {
       ...createIdColumns(kalleId, djangoId),
       ...createDateColumns(new Date(Date.now() - oneHour)),
     },
-    // Matti's reviews
+    // matti's reviews
     {
       rating: 70,
       text: loremIpsum,
@@ -80,7 +82,7 @@ exports.seed = async knex => {
       ...createIdColumns(mattiId, djangoId),
       ...createDateColumns(new Date(Date.now() - 2 * oneHour)),
     },
-    // Elina's reviews
+    // elina's reviews
     {
       rating: 75,
       text: loremIpsum,
@@ -92,6 +94,20 @@ exports.seed = async knex => {
       text: loremIpsum,
       ...createIdColumns(elinaId, formikId),
       ...createDateColumns(new Date(Date.now() - 3 * oneHour)),
+    },
+    // johndoe's reviews
+    {
+      rating: 89,
+      text: loremIpsum,
+      ...createIdColumns(johndoeId, formikId),
+      ...createDateColumns(new Date(Date.now() - 4 * oneHour)),
+    },
+    // leeroyjenkins' reviews
+    {
+      rating: 96,
+      text: loremIpsum,
+      ...createIdColumns(leeroyjenkinsId, formikId),
+      ...createDateColumns(new Date(Date.now() - 5 * oneHour)),
     },
   ]);
 };
