@@ -70,9 +70,11 @@ export const resolvers = {
       } else if (searchKeyword) {
         const likeFilter = getLikeFilter(searchKeyword);
 
-        query = query
-          .where('ownerName', 'like', likeFilter)
-          .orWhere('name', 'like', likeFilter);
+        query = query.where(qb => {
+          return qb
+            .where('ownerName', 'like', likeFilter)
+            .orWhere('name', 'like', likeFilter);
+        });
       }
 
       if (orderColumn === 'ratingAverage') {
