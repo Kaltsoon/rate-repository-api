@@ -48,7 +48,7 @@ mutation {
 }
 ```
 
-All access tokens expire after **seven days**. If you performed step 3. in the "Getting started" section, users "kalle", "elina" and "matti" all have the password "password".
+All access tokens expire after **seven days**. If you performed step 5. in the "Getting started" section, users "kalle", "elina" and "matti" all have the password "password".
 
 You can also register a new user by performing the `createUser` mutation:
 
