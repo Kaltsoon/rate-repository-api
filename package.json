@@ -42,7 +42,7 @@
   "dependencies": {
     "@koa/cors": "^3.0.0",
     "apollo-server": "^2.10.1",
-    "apollo-server-koa": "^2.10.1",
+    "apollo-server-koa": "^2.14.2",
     "axios": "^0.19.2",
     "bcrypt": "^5.0.0",
     "dataloader": "^2.0.0",
