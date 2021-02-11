@@ -1,6 +1,6 @@
 import { gql, ApolloError } from 'apollo-server';
 import * as yup from 'yup';
-import uuid from 'uuid/v4';
+import { v4 as uuid } from 'uuid';
 import bcrypt from 'bcrypt';
 
 import User from '../../models/User';
@@ -34,21 +34,12 @@ class UsernameTakenError extends ApolloError {
 
 const argsSchema = yup.object().shape({
   user: yup.object().shape({
-    username: yup
-      .string()
-      .min(1)
-      .max(30)
-      .lowercase()
-      .trim(),
-    password: yup
-      .string()
-      .min(5)
-      .max(50)
-      .trim(),
+    username: yup.string().min(1).max(30).lowercase().trim(),
+    password: yup.string().min(5).max(50).trim(),
   }),
 });
 
-const createPasswordHash = password => bcrypt.hash(password, 10);
+const createPasswordHash = (password) => bcrypt.hash(password, 10);
 
 export const resolvers = {
   Mutation: {
