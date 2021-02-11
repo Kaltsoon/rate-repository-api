@@ -7,6 +7,7 @@ export const typeDefs = gql`
   }
 
   type UserConnection {
+    totalCount: Int!
     pageInfo: PageInfo!
     edges: [UserEdge!]!
   }

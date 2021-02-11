@@ -1,4 +1,5 @@
 import BaseModel from './BaseModel';
+import knex from '../utils/knex';
 
 class User extends BaseModel {
   static get idColumn() {
@@ -10,4 +11,4 @@ class User extends BaseModel {
   }
 }
 
-export default User;
+export default User.bindKnex(knex);

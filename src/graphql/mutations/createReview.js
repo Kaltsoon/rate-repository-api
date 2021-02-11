@@ -1,7 +1,13 @@
 import { gql, ApolloError } from 'apollo-server';
 import * as yup from 'yup';
 
-import { GithubRepositoryNotFoundError } from '../../utils/githubClient';
+import {
+  githubClient,
+  GithubRepositoryNotFoundError,
+} from '../../utils/githubClient';
+
+import Repository from '../../models/Repository';
+import Review from '../../models/Review';
 
 export const typeDefs = gql`
   input CreateReviewInput {
@@ -28,46 +34,45 @@ class RepositoryAlreadyReviewedError extends ApolloError {
 const createRepositoryId = (ownerUsername, repositoryName) =>
   [ownerUsername, repositoryName].join('.');
 
-const createReviewInputSchema = yup.object().shape({
-  repositoryName: yup
-    .string()
-    .required()
-    .lowercase()
-    .trim(),
-  ownerName: yup
-    .string()
-    .required()
-    .lowercase()
-    .trim(),
-  rating: yup
-    .number()
-    .integer()
-    .min(0)
-    .max(100)
-    .required(),
-  text: yup
-    .string()
-    .max(2000)
-    .trim(),
+const createReviewId = (userId, repositoryId) => {
+  return [userId, repositoryId].join('.');
+};
+
+const argsSchema = yup.object().shape({
+  review: yup.object().shape({
+    repositoryName: yup
+      .string()
+      .required()
+      .lowercase()
+      .trim(),
+    ownerName: yup
+      .string()
+      .required()
+      .lowercase()
+      .trim(),
+    rating: yup
+      .number()
+      .integer()
+      .min(0)
+      .max(100)
+      .required(),
+    text: yup
+      .string()
+      .max(2000)
+      .trim(),
+  }),
 });
 
 export const resolvers = {
   Mutation: {
-    createReview: async (
-      obj,
-      args,
-      { models: { Repository, Review }, githubClient, authService },
-    ) => {
-      const userId = authService.assertIsAuthorized();
+    createReview: async (obj, args, { authService }) => {
+      const authorizedUser = await authService.getAuthorizedUserOrFail();
 
-      const normalizedReview = await createReviewInputSchema.validate(
-        args.review,
-        {
-          stripUnknown: true,
-        },
-      );
+      const { review } = await argsSchema.validate(args, {
+        stripUnknown: true,
+      });
 
-      const { repositoryName, ownerName } = normalizedReview;
+      const { repositoryName, ownerName } = review;
 
       const existingRepository = await Repository.query().findOne({
         name: repositoryName,
@@ -98,7 +103,7 @@ export const resolvers = {
         });
       }
 
-      const id = [userId, repositoryId].join('.');
+      const id = createReviewId(authorizedUser.id, repositoryId);
 
       const existringReview = await Review.query().findById(id);
 
@@ -106,15 +111,13 @@ export const resolvers = {
         throw new RepositoryAlreadyReviewedError();
       }
 
-      await Review.query().insert({
+      return Review.query().insertAndFetch({
         id,
-        userId,
+        userId: authorizedUser.id,
         repositoryId,
-        text: normalizedReview.text,
-        rating: normalizedReview.rating,
+        text: review.text,
+        rating: review.rating,
       });
-
-      return Review.query().findById(id);
     },
   },
 };

@@ -1,6 +1,13 @@
 import LRUCache from 'lru-cache';
 import { ApolloError } from 'apollo-server';
 import { pick, get } from 'lodash';
+import axios from 'axios';
+
+import {
+  GITHUB_API_URL,
+  GITHUB_CLIENT_ID,
+  GITHUB_CLIENT_SECRET,
+} from '../config';
 
 const oneHour = 1000 * 60 * 60;
 
@@ -9,7 +16,7 @@ const HTTP_CLIENT_ERROR = Symbol();
 const isNotFoundError = error =>
   get(error[HTTP_CLIENT_ERROR], 'response.status') === 404;
 
-class GithubError extends ApolloError {
+export class GithubError extends ApolloError {
   constructor(message, properties) {
     super(message, 'GITHUB_API_FAILURE', properties);
   }
@@ -43,11 +50,17 @@ export class GithubRepositoryNotFoundError extends ApolloError {
   }
 }
 
-class GithubClient {
-  constructor({ httpClient, cacheMaxAge = oneHour, clientId, clientSecret }) {
+export class GithubClient {
+  constructor({
+    baseUrl = GITHUB_API_URL,
+    clientId = GITHUB_CLIENT_ID,
+    clientSecret = GITHUB_CLIENT_SECRET,
+    cacheMaxAge = oneHour,
+  } = {}) {
+    this.httpClient = axios.create({ baseURL: baseUrl });
+
     this.clientId = clientId;
     this.clientSecret = clientSecret;
-    this.httpClient = httpClient;
     this.cache = new LRUCache({ max: 100, maxAge: cacheMaxAge });
   }
 
@@ -97,11 +110,11 @@ class GithubClient {
     }
   }
 
-  async getRepository(username, repository) {
+  async getRepository(ownerName, repository) {
     try {
       const data = await this.getRequestWithCache(
-        `repository.${username}.${repository}`,
-        `/repos/${username}/${repository}`,
+        `repository.${ownerName}.${repository}`,
+        `/repos/${ownerName}/${repository}`,
       );
 
       return data;
@@ -115,6 +128,6 @@ class GithubClient {
   }
 }
 
-const createGithubClient = options => new GithubClient(options);
+export const githubClient = new GithubClient();
 
-export default createGithubClient;
+export default githubClient;

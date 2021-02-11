@@ -1,5 +1,7 @@
 import { gql, UserInputError, ForbiddenError } from 'apollo-server';
 
+import Review from '../../models/Review';
+
 export const typeDefs = gql`
   extend type Mutation {
     """
@@ -11,8 +13,8 @@ export const typeDefs = gql`
 
 export const resolvers = {
   Mutation: {
-    deleteReview: async (obj, args, { models: { Review }, authService }) => {
-      const userId = authService.assertIsAuthorized();
+    deleteReview: async (obj, args, { authService }) => {
+      const authorizedUser = await authService.getAuthorizedUserOrFail();
 
       const review = await Review.query().findById(args.id);
 
@@ -20,7 +22,7 @@ export const resolvers = {
         throw new UserInputError(`Review with id ${args.id} does not exist`);
       }
 
-      if (review.userId !== userId) {
+      if (review.userId !== authorizedUser.id) {
         throw new ForbiddenError('User is not authorized to delete the review');
       }
 

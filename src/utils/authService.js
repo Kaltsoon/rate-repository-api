@@ -1,17 +1,18 @@
-import jwt from 'jsonwebtoken';
 import { AuthenticationError } from 'apollo-server';
 
-const oneWeek = 1000 * 60 * 60 * 24 * 7;
+import { ACCESS_TOKEN_EXPIRATION_TIME } from '../config';
+import signJwt from './signJwt';
+import verifyJwt from './verifyJwt';
 
 const subject = 'accessToken';
 
 class AuthService {
-  constructor({ accessToken, jwtSecret }) {
-    this.jwtSecret = jwtSecret;
+  constructor({ accessToken, dataLoaders }) {
     this.accessToken = accessToken;
+    this.dataLoaders = dataLoaders;
   }
 
-  getUserId() {
+  async getAuthorizedUserId() {
     if (!this.accessToken) {
       return null;
     }
@@ -19,7 +20,7 @@ class AuthService {
     let tokenPayload;
 
     try {
-      tokenPayload = jwt.verify(this.accessToken, this.jwtSecret, { subject });
+      tokenPayload = verifyJwt(this.accessToken, { subject });
     } catch (e) {
       return null;
     }
@@ -27,13 +28,41 @@ class AuthService {
     return tokenPayload.userId;
   }
 
+  async getAuthorizedUser() {
+    const id = await this.getAuthorizedUserId();
+
+    if (!id) {
+      return null;
+    }
+
+    return this.dataLoaders.userLoader.load(id);
+  }
+
+  async getAuthorizedUserOrFail(error) {
+    const normalizedError =
+      error || new AuthService('Authorization is required');
+
+    const user = await this.getAuthorizedUser();
+
+    if (!user) {
+      throw new normalizedError();
+    }
+
+    return user;
+  }
+
   createAccessToken(userId) {
+    const expiresAt = new Date(Date.now() + ACCESS_TOKEN_EXPIRATION_TIME);
+
     return {
-      accessToken: jwt.sign({ userId }, this.jwtSecret, {
-        expiresIn: '7d',
-        subject,
-      }),
-      expiresAt: new Date(Date.now() + oneWeek),
+      accessToken: signJwt(
+        { userId },
+        {
+          expiresIn: '7d',
+          subject,
+        },
+      ),
+      expiresAt,
     };
   }
 
@@ -48,6 +77,4 @@ class AuthService {
   }
 }
 
-const createAuthService = options => new AuthService(options);
-
-export default createAuthService;
+export default AuthService;

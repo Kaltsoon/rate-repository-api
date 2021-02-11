@@ -2,6 +2,8 @@ import { gql, UserInputError } from 'apollo-server';
 import * as yup from 'yup';
 import bcrypt from 'bcrypt';
 
+import User from '../../models/User';
+
 export const typeDefs = gql`
   input AuthorizeInput {
     username: String!
@@ -22,31 +24,28 @@ export const typeDefs = gql`
   }
 `;
 
-const authorizeInputSchema = yup.object().shape({
-  username: yup
-    .string()
-    .required()
-    .lowercase()
-    .trim(),
-  password: yup
-    .string()
-    .required()
-    .trim(),
+const argsSchema = yup.object().shape({
+  credentials: yup.object().shape({
+    username: yup
+      .string()
+      .required()
+      .lowercase()
+      .trim(),
+    password: yup
+      .string()
+      .required()
+      .trim(),
+  }),
 });
 
 export const resolvers = {
   Mutation: {
-    authorize: async (obj, args, { models, authService }) => {
-      const { User } = models;
-
-      const normalizedAuthorization = await authorizeInputSchema.validate(
-        args.credentials,
-        {
-          stripUnknown: true,
-        },
-      );
-
-      const { username, password } = normalizedAuthorization;
+    authorize: async (obj, args, { authService }) => {
+      const {
+        credentials: { username, password },
+      } = await argsSchema.validate(args, {
+        stripUnknown: true,
+      });
 
       const user = await User.query().findOne({ username });
 

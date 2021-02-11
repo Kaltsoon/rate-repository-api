@@ -7,6 +7,7 @@ export const typeDefs = gql`
   }
 
   type ReviewConnection {
+    totalCount: Int!
     pageInfo: PageInfo!
     edges: [ReviewEdge!]!
   }

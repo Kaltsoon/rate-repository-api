@@ -2,7 +2,8 @@ import { gql } from 'apollo-server';
 import { get } from 'lodash';
 import * as yup from 'yup';
 
-import createPaginationQuery from '../../utils/createPaginationQuery';
+import githubClient from '../../utils/githubClient';
+import Review from '../../models/Review';
 
 export const typeDefs = gql`
   type Repository {
@@ -27,7 +28,7 @@ export const typeDefs = gql`
   }
 `;
 
-const reviewsArgsSchema = yup.object({
+const argsSchema = yup.object({
   after: yup.string(),
   first: yup
     .number()
@@ -36,11 +37,10 @@ const reviewsArgsSchema = yup.object({
     .default(30),
 });
 
-const makeGithubRepositoryResolver = getValue => async (
-  { ownerName, name },
-  args,
-  { githubClient },
-) => {
+const makeGithubRepositoryResolver = getValue => async ({
+  ownerName,
+  name,
+}) => {
   return getValue(await githubClient.getRepository(ownerName, name));
 };
 
@@ -49,21 +49,18 @@ export const resolvers = {
     user: ({ userId }, args, { dataLoaders: { userLoader } }) => {
       return userLoader.load(userId);
     },
-    reviews: async (obj, args, { models: { Review } }) => {
-      const normalizedArgs = await reviewsArgsSchema.validate(args);
+    reviews: async ({ id }, args) => {
+      const { first, after } = await argsSchema.validate(args);
 
-      return createPaginationQuery(
-        () =>
-          Review.query().where({
-            repositoryId: obj.id,
-          }),
-        {
-          orderColumn: 'createdAt',
-          orderDirection: 'desc',
-          first: normalizedArgs.first,
-          after: normalizedArgs.after,
-        },
-      );
+      return Review.query()
+        .where({
+          repositoryId: id,
+        })
+        .cursorPaginate({
+          orderBy: [{ column: 'createdAt', direction: 'desc' }, 'id'],
+          first,
+          after,
+        });
     },
     ratingAverage: async (
       { id },
@@ -75,15 +72,15 @@ export const resolvers = {
       args,
       { dataLoaders: { repositoryReviewCountLoader } },
     ) => repositoryReviewCountLoader.load(id),
-    authorizedUserHasReviewed: (
+    authorizedUserHasReviewed: async (
       { id },
       args,
       { dataLoaders: { userRepositoryReviewExistsLoader }, authService },
     ) => {
-      const userId = authService.getUserId();
+      const authorizedUser = await authService.getAuthorizedUser();
 
-      return userId
-        ? userRepositoryReviewExistsLoader.load([userId, id])
+      return authorizedUser
+        ? userRepositoryReviewExistsLoader.load([authorizedUser.id, id])
         : null;
     },
     fullName: ({ ownerName, name }) => [ownerName, name].join('/'),

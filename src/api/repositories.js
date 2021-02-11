@@ -1,7 +1,8 @@
 import Router from 'koa-router';
 import { get } from 'lodash';
 
-import createPaginationQuery from '../utils/createPaginationQuery';
+import githubClient from '../utils/githubClient';
+import Repository from '../models/Repository';
 
 const router = new Router();
 
@@ -27,13 +28,11 @@ const getNormalizedRepository = (
 
 router.get('/', async ctx => {
   const {
-    models: { Repository },
-    githubClient,
     dataLoaders: { repositoryRatingAverageLoader, repositoryReviewCountLoader },
   } = ctx;
 
-  const data = await createPaginationQuery(() => Repository.query(), {
-    orderColumn: 'createdAt',
+  const data = await Repository.query().cursorPaginate({
+    orderBy: ['createdAt', 'id'],
   });
 
   const repositoryIds = data.edges.map(edge => edge.node.id);

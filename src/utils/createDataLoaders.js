@@ -1,6 +1,10 @@
 import DataLoader from 'dataloader';
 import { camelCase, isArray, find, zipObject } from 'lodash';
 
+import Repository from '../models/Repository';
+import Review from '../models/Review';
+import User from '../models/User';
+
 const jsonCacheKeyFn = value => JSON.stringify(value);
 
 const createModelLoader = Model =>
@@ -27,7 +31,7 @@ const createModelLoader = Model =>
     },
   );
 
-const createRepositoryRatingAverageLoader = Review =>
+const createRepositoryRatingAverageLoader = () =>
   new DataLoader(async repositoryIds => {
     const reviews = await Review.query()
       .whereIn('repositoryId', repositoryIds)
@@ -42,7 +46,7 @@ const createRepositoryRatingAverageLoader = Review =>
     });
   });
 
-const createRepositoryReviewCountLoader = Review =>
+const createRepositoryReviewCountLoader = () =>
   new DataLoader(async repositoryIds => {
     const reviews = await Review.query()
       .whereIn('repositoryId', repositoryIds)
@@ -57,7 +61,7 @@ const createRepositoryReviewCountLoader = Review =>
     });
   });
 
-const createUserRepositoryReviewExistsLoader = Review =>
+const createUserRepositoryReviewExistsLoader = () =>
   new DataLoader(
     async userIdRepositoryIdTuples => {
       const userIds = userIdRepositoryIdTuples.map(([userId]) => userId);
@@ -81,7 +85,7 @@ const createUserRepositoryReviewExistsLoader = Review =>
     },
   );
 
-const createUserReviewCountLoader = Review =>
+const createUserReviewCountLoader = () =>
   new DataLoader(async userIds => {
     const reviews = await Review.query()
       .whereIn('userId', userIds)
@@ -96,21 +100,15 @@ const createUserReviewCountLoader = Review =>
     });
   });
 
-export const createDataLoaders = ({ models }) => {
+export const createDataLoaders = () => {
   return {
-    repositoryLoader: createModelLoader(models.Repository),
-    userLoader: createModelLoader(models.User),
-    reviewLoader: createModelLoader(models.Review),
-    repositoryRatingAverageLoader: createRepositoryRatingAverageLoader(
-      models.Review,
-    ),
-    repositoryReviewCountLoader: createRepositoryReviewCountLoader(
-      models.Review,
-    ),
-    userRepositoryReviewExistsLoader: createUserRepositoryReviewExistsLoader(
-      models.Review,
-    ),
-    userReviewCountLoader: createUserReviewCountLoader(models.Review),
+    repositoryLoader: createModelLoader(Repository),
+    userLoader: createModelLoader(User),
+    reviewLoader: createModelLoader(Review),
+    repositoryRatingAverageLoader: createRepositoryRatingAverageLoader(),
+    repositoryReviewCountLoader: createRepositoryReviewCountLoader(),
+    userRepositoryReviewExistsLoader: createUserRepositoryReviewExistsLoader(),
+    userReviewCountLoader: createUserReviewCountLoader(),
   };
 };
 

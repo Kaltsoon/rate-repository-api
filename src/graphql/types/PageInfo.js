@@ -2,8 +2,8 @@ import { gql } from 'apollo-server';
 
 export const typeDefs = gql`
   type PageInfo {
+    hasPreviousPage: Boolean!
     hasNextPage: Boolean!
-    totalCount: Int!
     startCursor: String
     endCursor: String
   }

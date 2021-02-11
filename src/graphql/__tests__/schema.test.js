@@ -1,9 +1,7 @@
-import createSchema from '../schema';
+import schema from '../schema';
 
 describe('createSchema', () => {
   it('creates schema without errors', () => {
-    createSchema();
-
-    expect(true).toBe(true);
+    expect(schema).toBeDefined();
   });
 });

@@ -1,9 +1,11 @@
 require('dotenv').config();
 
+const FILENAME = process.env.DATABASE_FILENAME || 'database.sqlite';
+
 module.exports = {
   client: 'sqlite3',
   connection: {
-    filename: process.env.DATABASE_FILENAME,
+    filename: FILENAME,
   },
   useNullAsDefault: true,
   seeds: {

@@ -7,6 +7,7 @@ export const typeDefs = gql`
   }
 
   type RepositoryConnection {
+    totalCount: Int!
     pageInfo: PageInfo!
     edges: [RepositoryEdge!]!
   }

@@ -70,11 +70,9 @@ const resolvers = merge(
   deleteReviewMutation.resolvers,
 );
 
-const createSchema = () => {
-  return makeExecutableSchema({
-    typeDefs,
-    resolvers,
-  });
-};
+const schema = makeExecutableSchema({
+  typeDefs,
+  resolvers,
+});
 
-export default createSchema;
+export default schema;
