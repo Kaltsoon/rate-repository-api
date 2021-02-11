@@ -15,14 +15,8 @@
     "seed:run": "knex seed:run"
   },
   "lint-staged": {
-    "src/**/*.js": [
-      "eslint",
-      "git add"
-    ],
-    "*.{js,json,css,md}": [
-      "prettier --write",
-      "git add"
-    ]
+    "src/**/*.js": "eslint",
+    "*.{js,json,css,md}": "prettier --write"
   },
   "husky": {
     "hooks": {
