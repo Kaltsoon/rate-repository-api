@@ -1,12 +1,9 @@
-import Router from 'koa-router';
 import { get } from 'lodash';
 
-import githubClient from '../utils/githubClient';
-import Repository from '../models/Repository';
+import githubClient from '../../utils/githubClient';
+import Repository from '../../models/Repository';
 
-const router = new Router();
-
-const getNormalizedRepository = (
+const getRepositoryPayload = (
   repository,
   githubRepository,
   reviewCount,
@@ -26,7 +23,7 @@ const getNormalizedRepository = (
   ownerAvatarUrl: get(githubRepository, 'owner.avatar_url') || null,
 });
 
-router.get('/', async ctx => {
+const getRepositories = async ctx => {
   const {
     dataLoaders: { repositoryRatingAverageLoader, repositoryReviewCountLoader },
   } = ctx;
@@ -51,7 +48,7 @@ router.get('/', async ctx => {
     ...data,
     edges: data.edges.map((edge, index) => ({
       ...edge,
-      node: getNormalizedRepository(
+      node: getRepositoryPayload(
         edge.node,
         githubRepositories[index],
         reviewCounts[index],
@@ -59,6 +56,6 @@ router.get('/', async ctx => {
       ),
     })),
   };
-});
+};
 
-export default router;
+export default getRepositories;
