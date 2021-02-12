@@ -40,7 +40,7 @@ class AuthService {
 
   async getAuthorizedUserOrFail(error) {
     const normalizedError =
-      error || new AuthService('Authorization is required');
+      error || new AuthenticationError('Authorization is required');
 
     const user = await this.getAuthorizedUser();
 
@@ -64,16 +64,6 @@ class AuthService {
       ),
       expiresAt,
     };
-  }
-
-  assertIsAuthorized() {
-    const userId = this.getUserId();
-
-    if (!userId) {
-      throw new AuthenticationError('Access token is invalid or expired');
-    }
-
-    return userId;
   }
 }
 
