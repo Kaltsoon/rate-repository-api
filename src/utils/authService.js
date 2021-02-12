@@ -58,7 +58,7 @@ class AuthService {
       accessToken: signJwt(
         { userId },
         {
-          expiresIn: '7d',
+          expiresIn: expiresAt - new Date(),
           subject,
         },
       ),
