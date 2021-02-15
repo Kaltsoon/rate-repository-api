@@ -45,7 +45,7 @@ class AuthService {
     const user = await this.getAuthorizedUser();
 
     if (!user) {
-      throw new normalizedError();
+      throw normalizedError;
     }
 
     return user;
