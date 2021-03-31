@@ -8,7 +8,4 @@ module.exports = {
     filename: FILENAME,
   },
   useNullAsDefault: true,
-  seeds: {
-    direcotry: './seeds',
-  },
 };
