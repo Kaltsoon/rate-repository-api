@@ -51,7 +51,7 @@
     "koa-bodyparser": "^4.3.0",
     "koa-morgan": "^1.0.1",
     "koa-router": "^10.0.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "lru-cache": "^6.0.0",
     "objection": "^2.1.2",
     "sqlite3": "^5.0.2",
