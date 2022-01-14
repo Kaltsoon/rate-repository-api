@@ -18,13 +18,13 @@ Node (versions `12.X.X` are tested, but later versions _might_ work as well) and
 
 4. Run `npm run build`. This will setup the SQLite database and run the migrations.
 
-5. **(Optional)** To populate the database with some seed data you can run `npm run seed:run`. **Note:** running this command will remove all existing data.
+5. To populate the database with some seed data, run `npm run seed:run`. **Note:** running this command will remove all existing data.
 
-6. All done! Just run `npm start` to start the server. After the server has started you should be able to access the GraphQL playground at http://localhost:5000/graphql.
+6. All done! Just run `npm start` to start the server. After the server has started you should be able to access the Apollo Sandbox at http://localhost:4000.
 
-## 🔑 Authorization
+## 🔑 Authentication
 
-To list all the registered users, you can run this query in the GraphQL playground:
+To list all the registered users, you can run this query in the Apollo Sandbox:
 
 ```javascript
 {
@@ -38,11 +38,11 @@ To list all the registered users, you can run this query in the GraphQL playgrou
 }
 ```
 
-You can retrieve an access token by performing the `authorize` mutation:
+You can retrieve an access token by performing the `authenticate` mutation:
 
 ```javascript
 mutation {
-  authorize(credentials: { username: "kalle", password: "password" }) {
+  authenticate(credentials: { username: "kalle", password: "password" }) {
     accessToken
   }
 }
@@ -61,9 +61,9 @@ mutation {
 }
 ```
 
-### Authorize requests in the GraphQL playground
+### Authorize requests in the Apollo Sandbox
 
-A handy way to authorize requests in the GraphQL playground is to retrieve an access token using the `authorize` mutation (see above for details) and then add the following in the "HTTP HEADERS" tab below the query editor:
+A handy way to authorize requests in the Apollo Sandbox is to retrieve an access token using the `authorize` mutation (see above for details) and then add the following in the "Headers" tab below the operations editor:
 
 ```json
 {
@@ -75,11 +75,11 @@ Replace the `<ACCESS_TOKEN>` part with your access token.
 
 ## 📖 Documentation
 
-GraphQL playground offers documentation on how to use the API. Start the server by running `npm start`, open the GraphQL playground at http://localhost:5000/graphql and click the "docs" tab.
+Apollo Sandbox offers documentation on how to use the API. Start the server by running `npm start`, open the Apollo Sandbox at http://localhost:4000 and you should be able to see the documentation next to the operations editor.
 
 ## 🐛 Found a bug?
 
-Submit an issue with the bug description and a way to reproduce the bug. If you have already come up with a solution, we will gladly accept a pull request.
+Submit an issue with the bug description and a sway to reproduce the bug. If you have already come up with a solution, we will gladly accept a pull request.
 
 ## ❓ FAQ
 

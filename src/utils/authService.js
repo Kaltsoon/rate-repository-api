@@ -12,7 +12,7 @@ class AuthService {
     this.dataLoaders = dataLoaders;
   }
 
-  async getAuthorizedUserId() {
+  async getUserId() {
     if (!this.accessToken) {
       return null;
     }
@@ -28,8 +28,8 @@ class AuthService {
     return tokenPayload.userId;
   }
 
-  async getAuthorizedUser() {
-    const id = await this.getAuthorizedUserId();
+  async getUser() {
+    const id = await this.getUserId();
 
     if (!id) {
       return null;
@@ -38,11 +38,11 @@ class AuthService {
     return this.dataLoaders.userLoader.load(id);
   }
 
-  async getAuthorizedUserOrFail(error) {
+  async getUserOrFail(error) {
     const normalizedError =
       error || new AuthenticationError('Authorization is required');
 
-    const user = await this.getAuthorizedUser();
+    const user = await this.getUser();
 
     if (!user) {
       throw normalizedError;

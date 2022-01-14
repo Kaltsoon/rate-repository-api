@@ -1,13 +1,13 @@
-import { makeExecutableSchema, gql } from 'apollo-server';
+import { gql } from 'apollo-server';
 import { merge } from 'lodash';
 
 import Repository from './types/Repository';
 import repositoryQuery from './queries/repository';
 import User from './types/User';
 import createUserMutation from './mutations/createUser';
-import authorizeMutation from './mutations/authorize';
+import authenticateMutation from './mutations/authenticate';
 import usersQuery from './queries/users';
-import authorizedUserQuery from './queries/authorizedUser';
+import meQuery from './queries/me';
 import repositoriesQuery from './queries/repositories';
 import PageInfo from './types/PageInfo';
 import RepositoryConnection from './types/RepositoryConnection';
@@ -29,16 +29,16 @@ const rootTypeDefs = gql`
   }
 `;
 
-const typeDefs = [
+export const typeDefs = [
   rootTypeDefs,
   DateTime.typeDefs,
   Repository.typeDefs,
   repositoryQuery.typeDefs,
   User.typeDefs,
   createUserMutation.typeDefs,
-  authorizeMutation.typeDefs,
+  authenticateMutation.typeDefs,
   usersQuery.typeDefs,
-  authorizedUserQuery.typeDefs,
+  meQuery.typeDefs,
   repositoriesQuery.typeDefs,
   PageInfo.typeDefs,
   RepositoryConnection.typeDefs,
@@ -50,15 +50,15 @@ const typeDefs = [
   deleteReviewMutation.typeDefs,
 ];
 
-const resolvers = merge(
+export const resolvers = merge(
   DateTime.resolvers,
   Repository.resolvers,
   repositoryQuery.resolvers,
   User.resolvers,
   createUserMutation.resolvers,
-  authorizeMutation.resolvers,
+  authenticateMutation.resolvers,
   usersQuery.resolvers,
-  authorizedUserQuery.resolvers,
+  meQuery.resolvers,
   repositoriesQuery.resolvers,
   PageInfo.resolvers,
   RepositoryConnection.resolvers,
@@ -69,10 +69,3 @@ const resolvers = merge(
   UserConnection.resolvers,
   deleteReviewMutation.resolvers,
 );
-
-const schema = makeExecutableSchema({
-  typeDefs,
-  resolvers,
-});
-
-export default schema;

@@ -1,11 +1,24 @@
 import http from 'http';
 
 import logger from './utils/logger';
-import { PORT } from './config';
+import { API_PORT, APOLLO_PORT } from './config';
+import createApolloServer from './apolloServer';
 import app from './app';
 
-const server = http.createServer(app.callback()).listen(PORT);
+const startServer = async () => {
+  const httpServer = http.createServer(app);
 
-server.on('listening', () => {
-  logger.info(`Server listening to port ${PORT}`);
-});
+  const apolloServer = createApolloServer();
+
+  await apolloServer.listen({ port: APOLLO_PORT });
+
+  httpServer.on('request', app.callback());
+
+  await new Promise((resolve) =>
+    httpServer.listen({ port: API_PORT }, resolve),
+  );
+
+  logger.info(`Apollo Server ready at http://localhost:${APOLLO_PORT}`);
+};
+
+startServer();

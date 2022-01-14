@@ -5,12 +5,12 @@ import bcrypt from 'bcrypt';
 import User from '../../models/User';
 
 export const typeDefs = gql`
-  input AuthorizeInput {
+  input AuthenticateInput {
     username: String!
     password: String!
   }
 
-  type AuthorizationPayload {
+  type AuthenticatePayload {
     user: User!
     accessToken: String!
     expiresAt: DateTime!
@@ -20,27 +20,20 @@ export const typeDefs = gql`
     """
     Generates a new access token, if provided credentials (username and password) match any registered user.
     """
-    authorize(credentials: AuthorizeInput): AuthorizationPayload
+    authenticate(credentials: AuthenticateInput): AuthenticatePayload
   }
 `;
 
 const argsSchema = yup.object().shape({
   credentials: yup.object().shape({
-    username: yup
-      .string()
-      .required()
-      .lowercase()
-      .trim(),
-    password: yup
-      .string()
-      .required()
-      .trim(),
+    username: yup.string().required().lowercase().trim(),
+    password: yup.string().required().trim(),
   }),
 });
 
 export const resolvers = {
   Mutation: {
-    authorize: async (obj, args, { authService }) => {
+    authenticate: async (obj, args, { authService }) => {
       const {
         credentials: { username, password },
       } = await argsSchema.validate(args, {

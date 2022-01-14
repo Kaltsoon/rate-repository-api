@@ -3,16 +3,16 @@ import { gql } from 'apollo-server';
 export const typeDefs = gql`
   extend type Query {
     """
-    Returns the authorized user.
+    Returns the authenticated user.
     """
-    authorizedUser: User
+    me: User
   }
 `;
 
 export const resolvers = {
   Query: {
-    authorizedUser: (obj, args, { authService }) => {
-      return authService.getAuthorizedUser();
+    me: (obj, args, { authService }) => {
+      return authService.getUser();
     },
   },
 };

@@ -14,7 +14,7 @@ export const typeDefs = gql`
 export const resolvers = {
   Mutation: {
     deleteReview: async (obj, args, { authService }) => {
-      const authorizedUser = await authService.getAuthorizedUserOrFail();
+      const currentUser = await authService.getUserOrFail();
 
       const review = await Review.query().findById(args.id);
 
@@ -22,13 +22,11 @@ export const resolvers = {
         throw new UserInputError(`Review with id ${args.id} does not exist`);
       }
 
-      if (review.userId !== authorizedUser.id) {
+      if (review.userId !== currentUser.id) {
         throw new ForbiddenError('User is not authorized to delete the review');
       }
 
-      await Review.query()
-        .findById(args.id)
-        .delete();
+      await Review.query().findById(args.id).delete();
 
       return true;
     },

@@ -24,25 +24,20 @@ export const typeDefs = gql`
     ownerAvatarUrl: String
     description: String
     language: String
-    authorizedUserHasReviewed: Boolean
+    userHasReviewed: Boolean
   }
 `;
 
 const argsSchema = yup.object({
   after: yup.string(),
-  first: yup
-    .number()
-    .min(1)
-    .max(30)
-    .default(30),
+  first: yup.number().min(1).max(30).default(30),
 });
 
-const makeGithubRepositoryResolver = getValue => async ({
-  ownerName,
-  name,
-}) => {
-  return getValue(await githubClient.getRepository(ownerName, name));
-};
+const makeGithubRepositoryResolver =
+  (getValue) =>
+  async ({ ownerName, name }) => {
+    return getValue(await githubClient.getRepository(ownerName, name));
+  };
 
 export const resolvers = {
   Repository: {
@@ -72,40 +67,40 @@ export const resolvers = {
       args,
       { dataLoaders: { repositoryReviewCountLoader } },
     ) => repositoryReviewCountLoader.load(id),
-    authorizedUserHasReviewed: async (
+    userHasReviewed: async (
       { id },
       args,
       { dataLoaders: { userRepositoryReviewExistsLoader }, authService },
     ) => {
-      const authorizedUser = await authService.getAuthorizedUser();
+      const currentUser = await authService.getUser();
 
-      return authorizedUser
-        ? userRepositoryReviewExistsLoader.load([authorizedUser.id, id])
+      return currentUser
+        ? userRepositoryReviewExistsLoader.load([currentUser.id, id])
         : null;
     },
     fullName: ({ ownerName, name }) => [ownerName, name].join('/'),
-    ownerAvatarUrl: makeGithubRepositoryResolver(repository =>
+    ownerAvatarUrl: makeGithubRepositoryResolver((repository) =>
       get(repository, 'owner.avatar_url'),
     ),
-    description: makeGithubRepositoryResolver(repository =>
+    description: makeGithubRepositoryResolver((repository) =>
       get(repository, 'description'),
     ),
     stargazersCount: makeGithubRepositoryResolver(
-      repository => get(repository, 'stargazers_count') || 0,
+      (repository) => get(repository, 'stargazers_count') || 0,
     ),
     watchersCount: makeGithubRepositoryResolver(
-      repository => get(repository, 'watchers_count') || 0,
+      (repository) => get(repository, 'watchers_count') || 0,
     ),
     forksCount: makeGithubRepositoryResolver(
-      repository => get(repository, 'forks_count') || 0,
+      (repository) => get(repository, 'forks_count') || 0,
     ),
     openIssuesCount: makeGithubRepositoryResolver(
-      repository => get(repository, 'open_issues_count') || 0,
+      (repository) => get(repository, 'open_issues_count') || 0,
     ),
-    url: makeGithubRepositoryResolver(repository =>
+    url: makeGithubRepositoryResolver((repository) =>
       get(repository, 'html_url'),
     ),
-    language: makeGithubRepositoryResolver(repository =>
+    language: makeGithubRepositoryResolver((repository) =>
       get(repository, 'language'),
     ),
   },

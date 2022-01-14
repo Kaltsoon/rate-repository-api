@@ -40,33 +40,17 @@ const createReviewId = (userId, repositoryId) => {
 
 const argsSchema = yup.object().shape({
   review: yup.object().shape({
-    repositoryName: yup
-      .string()
-      .required()
-      .lowercase()
-      .trim(),
-    ownerName: yup
-      .string()
-      .required()
-      .lowercase()
-      .trim(),
-    rating: yup
-      .number()
-      .integer()
-      .min(0)
-      .max(100)
-      .required(),
-    text: yup
-      .string()
-      .max(2000)
-      .trim(),
+    repositoryName: yup.string().required().lowercase().trim(),
+    ownerName: yup.string().required().lowercase().trim(),
+    rating: yup.number().integer().min(0).max(100).required(),
+    text: yup.string().max(2000).trim(),
   }),
 });
 
 export const resolvers = {
   Mutation: {
     createReview: async (obj, args, { authService }) => {
-      const authorizedUser = await authService.getAuthorizedUserOrFail();
+      const currentUser = await authService.getUserOrFail();
 
       const { review } = await argsSchema.validate(args, {
         stripUnknown: true,
@@ -103,7 +87,7 @@ export const resolvers = {
         });
       }
 
-      const id = createReviewId(authorizedUser.id, repositoryId);
+      const id = createReviewId(currentUser.id, repositoryId);
 
       const existringReview = await Review.query().findById(id);
 
@@ -113,7 +97,7 @@ export const resolvers = {
 
       return Review.query().insertAndFetch({
         id,
-        userId: authorizedUser.id,
+        userId: currentUser.id,
         repositoryId,
         text: review.text,
         rating: review.rating,

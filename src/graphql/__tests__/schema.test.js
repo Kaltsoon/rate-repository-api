@@ -1,7 +1,14 @@
-import schema from '../schema';
+import { ApolloServer } from 'apollo-server-koa';
+
+import { typeDefs, resolvers } from '../schema';
 
 describe('createSchema', () => {
   it('creates schema without errors', () => {
-    expect(schema).toBeDefined();
+    const apolloServer = new ApolloServer({
+      resolvers,
+      typeDefs,
+    });
+
+    expect(apolloServer).toBeDefined();
   });
 });
