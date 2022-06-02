@@ -55,7 +55,7 @@
     "lodash": "^4.17.15",
     "lru-cache": "^6.0.0",
     "objection": "^3.0.1",
-    "sqlite3": "^5.0.2",
+    "sqlite3": "^5.0.3",
     "through2": "^4.0.2",
     "uuid": "^8.3.2",
     "winston": "^3.2.1",
