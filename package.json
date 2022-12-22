@@ -46,7 +46,7 @@
     "es6-error": "^4.1.1",
     "esm": "^3.2.25",
     "graphql": "^16.2.0",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "knex": "^0.95.15",
     "koa": "^2.11.0",
     "koa-bodyparser": "^4.3.0",
