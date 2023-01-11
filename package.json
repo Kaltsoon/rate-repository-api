@@ -47,7 +47,7 @@
     "esm": "^3.2.25",
     "graphql": "^16.2.0",
     "jsonwebtoken": "^8.5.1",
-    "knex": "^0.95.15",
+    "knex": "^2.4.0",
     "koa": "^2.11.0",
     "koa-bodyparser": "^4.3.0",
     "koa-morgan": "^1.0.1",
